@@ -9,16 +9,15 @@ export async function getLikedVideos() {
 
     console.log("Session", session);
 
-    if (error || !session?.access_token) {
+    if (error || !session?.provider_token) {
         console.error("No Google access token available");
         return null;
     }
 
-    const googleAccessToken = session.access_token;
-
+    const googleAccessToken = session.provider_token;
 
     const res = await fetch(
-        "https://www.googleapis.com/youtube/v3/videos?part=snippet&myRating=like&maxResults=10",
+        "https://www.googleapis.com/youtube/v3/videos?part=snippet&myRating=like&maxResults=50",
         {
             headers: {
                 Authorization: `Bearer ${googleAccessToken}`,
@@ -32,5 +31,5 @@ export async function getLikedVideos() {
     }
 
     const data = await res.json();
-    return data.items; // tableau de vidéos likées
+    return data; // tableau de vidéos likées
 }
