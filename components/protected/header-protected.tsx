@@ -1,20 +1,22 @@
 "use client";
 
-import { createClient } from '@/lib/supabase/client';
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import SignInButton from '../sign-in-button';
+import { createClient } from '@/lib/supabase/client';
 
-const navItems = [
-  { name: 'Features', href: '#features' },
-  { name: 'Pricing', href: '#pricing' },
-  { name: 'Privacy', href: '#trust' },
-  { name: 'My space', href: '/protected', auth: true },
+const navItems: { name: string; href: string; auth?: boolean }[] = [
+  { name: 'Home', href: '/protected' },
+  { name: 'Playlists', href: '/protected/playlists' },
+  { name: 'Rewind', href: '/protected/rewind' },
+  // { name: 'Pricing', href: '#pricing' },
+  // { name: 'Privacy', href: '#trust' },
+  // { name: 'My space', href: '/protected', auth: true },
 ];
 
-export function Header() {
+export function HeaderProtected() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -57,7 +59,7 @@ export function Header() {
               aria-label="YouTidy home"
             >
               <img src='/logo.png' alt='YouTidy Logo' className='h-8 w-8 rounded-full' />
-              <span className="font-jakarta font-bold text-xl text-gradient">YouTidy</span>
+              <span className="font-jakarta font-bold text-xl text-[#FFE066]">YouTidy</span>
             </Link>
           </div>
 

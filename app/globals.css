@@ -117,9 +117,9 @@
   }
 }
 
-/* .section {
-  @apply min-h-screen;
-} */
+.section {
+  @apply py-8 sm:py-12;
+}
 
 .text-gradient {
   @apply bg-clip-text text-transparent bg-gradient-to-b from-[#FFE066] to-[#FFD43B];

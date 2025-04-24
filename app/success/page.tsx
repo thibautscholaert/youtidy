@@ -8,14 +8,14 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 export default function SuccessPage() {
-  const searchParams = useSearchParams();
-  const sessionId = searchParams.get('session_id');
+  // const searchParams = useSearchParams();
+  // const sessionId = searchParams.get('session_id');
 
-  useEffect(() => {
-    // Here you would typically verify the payment with your backend
-    // and update the user's access level
-    console.log('Payment successful, session ID:', sessionId);
-  }, [sessionId]);
+  // useEffect(() => {
+  //   // Here you would typically verify the payment with your backend
+  //   // and update the user's access level
+  //   console.log('Payment successful, session ID:', sessionId);
+  // }, [sessionId]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
