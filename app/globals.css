@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    
+    --primary: 6 100% 67%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 48 100% 67%;
+    --secondary-foreground: 240 10% 3.9%;
+    
+    --muted: 240 5% 96.1%;
+    --muted-foreground: 240 4% 46.1%;
+    
+    --accent: 48 100% 67%;
+    --accent-foreground: 240 10% 3.9%;
+    
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 6 100% 67% / 10%;
+    --input: 6 100% 67% / 10%;
+    --ring: 6 100% 67%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+    
+    --radius: 1.5rem;
+  }
+  
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    
+    --primary: 6 100% 67%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 48 100% 67%;
+    --secondary-foreground: 240 10% 3.9%;
+    
+    --muted: 240 4% 8.9%;
+    --muted-foreground: 240 5% 64.9%;
+    
+    --accent: 48 100% 67%;
+    --accent-foreground: 240 10% 3.9%;
+    
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 6 100% 67% / 20%;
+    --input: 6 100% 67% / 20%;
+    --ring: 6 100% 67%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-gradient-to-b from-[#FF6B6B] to-[#FF8787] min-h-screen text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  h1, h2, h3, h4, h5 {
+    @apply font-jakarta font-bold text-[#FFE066];
+  }
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl leading-[1.1] drop-shadow-lg;
+  }
+  h2 {
+    @apply text-3xl md:text-4xl leading-tight drop-shadow-md;
+  }
+  h3 {
+    @apply text-2xl md:text-3xl leading-tight;
+  }
+  .font-jakarta {
+    font-family: var(--font-jakarta);
+  }
+  .font-inter {
+    font-family: var(--font-inter);
+  }
+}
+
+/* .section {
+  @apply min-h-screen;
+} */
+
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-b from-[#FFE066] to-[#FFD43B];
+}
+
+.hero-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 224, 102, 0.15), rgba(0, 0, 0, 0) 70%);
+  z-index: -1;
+}
+
+.gradient-border {
+  position: relative;
+  border-radius: var(--radius);
+  background: linear-gradient(to right, #FFE066, #FFD43B);
+  padding: 1px;
+}
+
+.retro-button-accent {
+  @apply bg-[#FFE066] text-gray-900 font-bold px-6 py-3 rounded-full 
+         shadow-[4px_4px_0_0_rgba(0,0,0,0.2)] 
+         hover:shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] 
+         hover:translate-x-[2px] hover:translate-y-[2px]
+         transition-all duration-200;
+}
+
+.retro-button {
+  @apply bg-[#D84130] text-white font-semibold px-6 py-3 rounded-full 
+        shadow-[4px_4px_0_0_rgba(0,0,0,0.2)] 
+        hover:shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] 
+        hover:translate-x-[2px] hover:translate-y-[2px]
+        transition-all duration-200;
+}
+
+.glass-card {
+  @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl shadow-xl;
+}
+
