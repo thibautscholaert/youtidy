@@ -7,8 +7,6 @@ export async function getLikedVideos() {
         error,
     } = await supabase.auth.getSession();
 
-    console.log("Session", session);
-
     if (error || !session?.provider_token) {
         console.error("No Google access token available");
         return null;

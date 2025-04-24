@@ -9,8 +9,9 @@ export function ProtectedPage() {
 
   useEffect(() => {
     getLikedVideos().then((videos) => {
+      console.log('Fetched liked videos:', videos);
       if (videos) {
-        setVideos(videos);
+        setVideos(videos.items);
       } else {
         console.error('Failed to fetch liked videos');
       }
