@@ -26,7 +26,7 @@ export default function SignInButton() {
             provider: 'google',
             options: {
                 redirectTo: `${window.location.origin}/auth/callback`,
-                scopes: 'https://www.googleapis.com/auth/youtube.readonly email profile'
+                // scopes: 'https://www.googleapis.com/auth/youtube.readonly email profile'
             }
         });
     };
