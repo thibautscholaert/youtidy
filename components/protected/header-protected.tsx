@@ -22,17 +22,16 @@ export function HeaderProtected() {
 
   const [authenticated, setAuthenticated] = useState(false);
 
-  const supabase = createClient();
-  supabase.auth.getSession().then(({ data: { session } }) => {
-    if (session) {
-      setAuthenticated(true);
-    } else {
-      setAuthenticated(false);
-    }
-  });
-
-
   useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setAuthenticated(true);
+      } else {
+        setAuthenticated(false);
+      }
+    });
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 30);
     };

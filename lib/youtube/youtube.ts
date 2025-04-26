@@ -1,6 +1,7 @@
+import { YoutubeVideoPage } from "@/types/yt-video-page";
 import { createClient } from "../supabase/client";
 
-export async function getLikedVideos() {
+export async function getLikedVideos(nextToken?: string): Promise<YoutubeVideoPage | null> {
     const supabase = createClient();
     const {
         data: { session },
@@ -14,8 +15,12 @@ export async function getLikedVideos() {
 
     const googleAccessToken = session.provider_token;
 
+    let url = "https://www.googleapis.com/youtube/v3/videos?part=snippet&myRating=like&maxResults=50";
+    if (nextToken) {
+        url += `&pageToken=${nextToken}`;
+    }
     const res = await fetch(
-        "https://www.googleapis.com/youtube/v3/videos?part=snippet&myRating=like&maxResults=50",
+        url,
         {
             headers: {
                 Authorization: `Bearer ${googleAccessToken}`,
