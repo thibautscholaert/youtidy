@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { RocketIcon, ThumbsUpIcon } from 'lucide-react';
 
 export function HeroSection() {
-
   const scrollTo = (id: string) => {
     const element = document.getElementById(id);
     if (element) {

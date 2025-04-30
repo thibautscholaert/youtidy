@@ -1,6 +1,7 @@
 'use client';
 
 import { signOutAction } from "@/app/actions";
+import { handleGoogleSignIn } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/client";
 import { Loader2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -12,31 +13,15 @@ export default function SignInButton() {
 
     useEffect(() => {
         const supabase = createClient();
-    supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session) {
-            setAuthenticated(true);
-        } else {
-            setAuthenticated(false);
-        }
-        setReady(true);
-    });
-    }, [setAuthenticated, setReady]);
-
-    const handleGoogleSignIn = async () => {
-        console.log(`${window.location.origin}/auth/callback`);
-        const supabase = createClient();
-        await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-                redirectTo: `${window.location.origin}/auth/callback`,
-                scopes: 'https://www.googleapis.com/auth/youtube.readonly email profile',
-                queryParams: {
-                    access_type: 'offline',
-                    prompt: 'consent',
-                },
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                setAuthenticated(true);
+            } else {
+                setAuthenticated(false);
             }
+            setReady(true);
         });
-    };
+    }, [setAuthenticated, setReady]);
 
     return (
         ready ? (

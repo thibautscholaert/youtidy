@@ -1,5 +1,6 @@
 import { YoutubeVideoPage } from "@/types/yt-video-page";
 import { createClient } from "../supabase/client";
+import { handleGoogleSignIn } from "../auth";
 
 export async function getLikedVideos(nextToken?: string): Promise<YoutubeVideoPage | null> {
     const supabase = createClient();
@@ -10,6 +11,7 @@ export async function getLikedVideos(nextToken?: string): Promise<YoutubeVideoPa
 
     if (error || !session?.provider_token) {
         console.error("No Google access token available");
+        handleGoogleSignIn();
         return null;
     }
 
@@ -30,6 +32,9 @@ export async function getLikedVideos(nextToken?: string): Promise<YoutubeVideoPa
 
     if (!res.ok) {
         console.error("Failed to fetch liked videos:", await res.text());
+        if(res.status === 403) {
+            handleGoogleSignIn();
+        }
         return null;
     }
 
