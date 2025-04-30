@@ -62,7 +62,13 @@ export function Header() {
           {/* Desktop navigation */}
           <nav className="hidden md:flex items-center space-x-6">
             {navItems.map((item) => (
-              <Link
+              item.auth ?  (authenticated && <Link
+                key={item.name}
+                href={item.href}
+                className="text-sm font-medium text-white hover:text-[#FFE066] transition-colors"
+              >
+                {item.name}
+              </Link>) : <Link
                 key={item.name}
                 href={item.href}
                 className="text-sm font-medium text-white hover:text-[#FFE066] transition-colors"

@@ -23,6 +23,7 @@ export default function SignInButton() {
     }, [setAuthenticated, setReady]);
 
     const handleGoogleSignIn = async () => {
+        console.log(`${window.location.origin}/auth/callback`);
         const supabase = createClient();
         await supabase.auth.signInWithOAuth({
             provider: 'google',
