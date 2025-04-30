@@ -3,14 +3,15 @@
 import { signOutAction } from "@/app/actions";
 import { createClient } from "@/lib/supabase/client";
 import { Loader2Icon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function SignInButton() {
 
     const [authenticated, setAuthenticated] = useState(false);
     const [ready, setReady] = useState(false);
 
-    const supabase = createClient();
+    useEffect(() => {
+        const supabase = createClient();
     supabase.auth.getSession().then(({ data: { session } }) => {
         if (session) {
             setAuthenticated(true);
@@ -19,6 +20,7 @@ export default function SignInButton() {
         }
         setReady(true);
     });
+    }, [setAuthenticated, setReady]);
 
     const handleGoogleSignIn = async () => {
         const supabase = createClient();
