@@ -20,69 +20,69 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
-    
+
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
-    
+
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    
+
     --primary: 6 100% 67%;
     --primary-foreground: 0 0% 100%;
-    
+
     --secondary: 48 100% 67%;
     --secondary-foreground: 240 10% 3.9%;
-    
+
     --muted: 240 5% 96.1%;
     --muted-foreground: 240 4% 46.1%;
-    
+
     --accent: 48 100% 67%;
     --accent-foreground: 240 10% 3.9%;
-    
+
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    
+
     --border: 6 100% 67% / 10%;
     --input: 6 100% 67% / 10%;
     --ring: 6 100% 67%;
 
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
-    
+
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
-    
+
     --info: 199 89% 48%;
     --info-foreground: 0 0% 100%;
-    
+
     --radius: 1.5rem;
   }
-  
+
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
-    
+
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
-    
+
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    
+
     --primary: 6 100% 67%;
     --primary-foreground: 0 0% 100%;
-    
+
     --secondary: 48 100% 67%;
     --secondary-foreground: 240 10% 3.9%;
-    
+
     --muted: 240 4% 8.9%;
     --muted-foreground: 240 5% 64.9%;
-    
+
     --accent: 48 100% 67%;
     --accent-foreground: 240 10% 3.9%;
-    
+
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    
+
     --border: 6 100% 67% / 20%;
     --input: 6 100% 67% / 20%;
     --ring: 6 100% 67%;
@@ -95,9 +95,15 @@
   }
   body {
     @apply bg-gradient-to-b from-[#FF6B6B] to-[#FF8787] min-h-screen text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
   }
-  h1, h2, h3, h4, h5 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
     @apply font-jakarta font-bold text-[#FFE066];
   }
   h1 {
@@ -118,7 +124,7 @@
 }
 
 .section {
-  @apply py-8 sm:py-12;
+  @apply py-16 sm:py-24;
 }
 
 .text-gradient {
@@ -136,7 +142,7 @@
 .gradient-border {
   position: relative;
   border-radius: var(--radius);
-  background: linear-gradient(to right, #FFE066, #FFD43B);
+  background: linear-gradient(to right, #ffe066, #ffd43b);
   padding: 1px;
 }
 
@@ -146,6 +152,10 @@
          hover:shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] 
          hover:translate-x-[2px] hover:translate-y-[2px]
          transition-all duration-200;
+
+  &:disabled {
+    @apply opacity-50 cursor-not-allowed shadow-none hover:translate-x-0 hover:translate-y-0;
+  }
 }
 
 .retro-button {
@@ -160,3 +170,26 @@
   @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl shadow-xl;
 }
 
+/* Scrollbar container */
+::-webkit-scrollbar {
+  height: 10px; /* for horizontal scroll */
+  width: 10px; /* for vertical scroll if needed */
+}
+
+/* Track (background) */
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+/* Scrollbar thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+  background-color: #fff176; /* Soft yellow like your pill counters */
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.4); /* Adds a soft border effect */
+}
+
+/* Hover effect */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #ffee58; /* Slightly brighter yellow */
+}

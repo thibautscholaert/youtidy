@@ -48,3 +48,13 @@ export interface YoutubeVideoPage {
   nextPageToken?: string;
   pageInfo: PageInfo;
 }
+
+export interface WatchedVideo {
+  title: string;
+  url: string;
+  videoId: string;
+  channelName?: string;
+  channelUrl?: string;
+  channelId: string;
+  time: string;
+}
