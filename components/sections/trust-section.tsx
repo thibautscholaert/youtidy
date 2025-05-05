@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { motion } from 'framer-motion';
@@ -32,7 +32,7 @@ export function TrustSection() {
     <section id="trust" className="py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <motion.h2 
+          <motion.h2
             className="text-3xl md:text-4xl font-bold mb-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -41,7 +41,7 @@ export function TrustSection() {
           >
             Privacy & Trust
           </motion.h2>
-          <motion.p 
+          <motion.p
             className="text-xl text-white max-w-3xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -54,7 +54,7 @@ export function TrustSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {trustPoints.map((point, index) => (
-            <motion.div 
+            <motion.div
               key={index}
               className="glass-card flex gap-4 items-start p-6"
               initial={{ opacity: 0, y: 20 }}
@@ -62,9 +62,7 @@ export function TrustSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
-              <div className="p-3 rounded-full bg-white/10">
-                {point.icon}
-              </div>
+              <div className="p-3 rounded-full bg-white/10">{point.icon}</div>
               <div>
                 <h3 className="text-lg font-semibold mb-2 text-[#FFE066]">{point.title}</h3>
                 <p className="text-white/90">{point.description}</p>

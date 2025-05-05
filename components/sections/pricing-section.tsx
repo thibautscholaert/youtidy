@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useToast } from '@/hooks/use-toast';
 import { getStripe } from '@/lib/stripe';
@@ -9,12 +9,7 @@ const pricingPlans = [
   {
     name: 'Free',
     price: '€0',
-    features: [
-      'Up to 300 liked videos',
-      'Basic auto sorting',
-      '2 playlists',
-      'Standard support',
-    ],
+    features: ['Up to 300 liked videos', 'Basic auto sorting', '2 playlists', 'Standard support'],
     cta: 'Get started',
     ctaColor: 'secondary',
     popular: false,
@@ -73,9 +68,9 @@ export function PricingSection() {
 
       if (error) {
         toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Something went wrong. Please try again.",
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Something went wrong. Please try again.',
         });
         return;
       }
@@ -83,9 +78,9 @@ export function PricingSection() {
       const stripe = await getStripe();
       if (!stripe) {
         toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Stripe failed to load. Please try again.",
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Stripe failed to load. Please try again.',
         });
         return;
       }
@@ -94,17 +89,17 @@ export function PricingSection() {
 
       if (stripeError) {
         toast({
-          variant: "destructive",
-          title: "Error",
+          variant: 'destructive',
+          title: 'Error',
           description: stripeError.message,
         });
       }
     } catch (error) {
       console.error('Error:', error);
       toast({
-        variant: "destructive",
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
+        variant: 'destructive',
+        title: 'Error',
+        description: 'An unexpected error occurred. Please try again.',
       });
     }
   };
@@ -113,17 +108,18 @@ export function PricingSection() {
     <section id="pricing" className="section py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <motion.h2 
+          <motion.h2
             className="text-3xl md:text-4xl font-bold mb-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            A simple price, no subscription.<br />
+            A simple price, no subscription.
+            <br />
             Like YouTube in 2008
           </motion.h2>
-          <motion.p 
+          <motion.p
             className="text-xl text-white max-w-3xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -136,12 +132,10 @@ export function PricingSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {pricingPlans.map((plan, index) => (
-            <motion.div 
+            <motion.div
               key={index}
               className={`glass-card overflow-hidden flex flex-col justify-between h-full p-6 ${
-                plan.popular
-                  ? 'border-2 border-[#FFE066]'
-                  : ''
+                plan.popular ? 'border-2 border-[#FFE066]' : ''
               }`}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -150,20 +144,17 @@ export function PricingSection() {
             >
               {plan.popular && (
                 <div className="flex items-center justify-center gap-2 top-0 left-0 w-full absolute bg-[#FFE066] text-gray-900 text-center py-1 text-sm font-medium">
-                  <SparklesIcon className='w-4 h-4 inline'/> <span className='uppercase font-semibold'>most popular</span>
+                  <SparklesIcon className="w-4 h-4 inline" />{' '}
+                  <span className="uppercase font-semibold">most popular</span>
                 </div>
               )}
               <div className="py-4">
                 <h3 className="text-2xl font-bold mb-2 text-[#FFE066]">{plan.name}</h3>
                 <div className="flex items-end gap-1 mb-6">
                   <span className="text-4xl font-bold text-white">{plan.price}</span>
-                  {plan.period && (
-                    <span className="text-white/80 mb-1">
-                      {plan.period}
-                    </span>
-                  )}
+                  {plan.period && <span className="text-white/80 mb-1">{plan.period}</span>}
                 </div>
-                
+
                 <ul className="mb-8 space-y-3">
                   {plan.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-2 text-white">
@@ -172,18 +163,15 @@ export function PricingSection() {
                     </li>
                   ))}
                 </ul>
-
               </div>
-              <button 
-                  className={`w-full retro-button ${
-                    plan.ctaColor === 'secondary'
-                      ? 'bg-white/20 text-white hover:bg-white/30'
-                      : ''
-                  }`}
-                  onClick={() => plan.productId && handlePurchase(plan.productId)}
-                >
-                  {plan.cta}
-                </button>
+              <button
+                className={`w-full retro-button ${
+                  plan.ctaColor === 'secondary' ? 'bg-white/20 text-white hover:bg-white/30' : ''
+                }`}
+                onClick={() => plan.productId && handlePurchase(plan.productId)}
+              >
+                {plan.cta}
+              </button>
             </motion.div>
           ))}
         </div>

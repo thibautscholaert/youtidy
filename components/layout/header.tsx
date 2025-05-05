@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { createClient } from '@/lib/supabase/client';
 import { motion } from 'framer-motion';
@@ -38,10 +38,9 @@ export function Header() {
 
   return (
     <motion.header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-        ? 'glass-card backdrop-blur-lg'
-        : 'bg-transparent'
-        }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? 'glass-card backdrop-blur-lg' : 'bg-transparent'
+      }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
@@ -49,33 +48,35 @@ export function Header() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
-            <Link
-              href="/"
-              className="flex items-center gap-2"
-              aria-label="YouTidy home"
-            >
-              <img src='/logo.png' alt='YouTidy Logo' className='h-8 w-8 rounded-full' />
+            <Link href="/" className="flex items-center gap-2" aria-label="YouTidy home">
+              <img src="/logo.png" alt="YouTidy Logo" className="h-8 w-8 rounded-full" />
               <span className="font-jakarta font-bold text-xl text-gradient">YouTidy</span>
             </Link>
           </div>
 
           {/* Desktop navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            {navItems.map((item) => (
-              item.auth ?  (authenticated && <Link
-                key={item.name}
-                href={item.href}
-                className="text-sm font-medium text-white hover:text-[#FFE066] transition-colors"
-              >
-                {item.name}
-              </Link>) : <Link
-                key={item.name}
-                href={item.href}
-                className="text-sm font-medium text-white hover:text-[#FFE066] transition-colors"
-              >
-                {item.name}
-              </Link>
-            ))}
+            {navItems.map((item) =>
+              item.auth ? (
+                authenticated && (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="text-sm font-medium text-white hover:text-[#FFE066] transition-colors"
+                  >
+                    {item.name}
+                  </Link>
+                )
+              ) : (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="text-sm font-medium text-white hover:text-[#FFE066] transition-colors"
+                >
+                  {item.name}
+                </Link>
+              )
+            )}
             <SignInButton />
           </nav>
 
@@ -87,11 +88,7 @@ export function Header() {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
             >
-              {isMobileMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
+              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>
@@ -107,23 +104,29 @@ export function Header() {
           transition={{ duration: 0.3 }}
         >
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {navItems.map((item) => (
-              item.auth ? (authenticated && <Link
-                key={item.name}
-                href={item.href}
-                className="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-[#FFE066] hover:bg-white/10"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {item.name}
-              </Link>) : <Link
-                key={item.name}
-                href={item.href}
-                className="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-[#FFE066] hover:bg-white/10"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {item.name}
-              </Link>
-            ))}
+            {navItems.map((item) =>
+              item.auth ? (
+                authenticated && (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-[#FFE066] hover:bg-white/10"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                )
+              ) : (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-[#FFE066] hover:bg-white/10"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              )
+            )}
             <div className="px-3 py-3">
               <SignInButton />
             </div>

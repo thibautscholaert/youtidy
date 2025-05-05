@@ -12,10 +12,7 @@ export async function POST(req: Request) {
     const product = PRODUCTS[productId as keyof typeof PRODUCTS];
 
     if (!product) {
-      return NextResponse.json(
-        { error: 'Invalid product' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid product' }, { status: 400 });
     }
 
     const session = await stripe.checkout.sessions.create({
@@ -41,9 +38,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ sessionId: session.id });
   } catch (error) {
     console.error('Error creating checkout session:', error);
-    return NextResponse.json(
-      { error: 'Error creating checkout session' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Error creating checkout session' }, { status: 500 });
   }
 }

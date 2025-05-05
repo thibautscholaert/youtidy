@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { motion } from 'framer-motion';
 import { RocketIcon, ThumbsUpIcon } from 'lucide-react';
@@ -26,7 +26,8 @@ export function HeroSection() {
               initial={{ opacity: 0, x: -400 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0 }}
-              className='text-4xl py-1'>
+              className="text-4xl py-1"
+            >
               You like.
               {/* <ThumbsUpIcon className='inline-block w-8 h-8 ' /> */}
             </motion.span>
@@ -34,12 +35,18 @@ export function HeroSection() {
               initial={{ opacity: 0, x: 400 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.6 }}
-              className='text-4xl py-1 '>You forget.</motion.span>
+              className="text-4xl py-1 "
+            >
+              You forget.
+            </motion.span>
             <motion.span
               initial={{ opacity: 0, y: -400 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 1.2 }}
-              className='text-5xl py-2 text-gradient'><strong>We</strong> tidy.</motion.span>
+              className="text-5xl py-2 text-gradient"
+            >
+              <strong>We</strong> tidy.
+            </motion.span>
           </motion.h1>
 
           <motion.p
@@ -57,8 +64,11 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="flex flex-col sm:flex-row justify-center gap-4"
           >
-            <button className="retro-button-accent flex items-center justify-center gap-2 sm:gap-4" onClick={() => scrollTo('demo')}>
-              <RocketIcon className='w-5 h-5 inline' />
+            <button
+              className="retro-button-accent flex items-center justify-center gap-2 sm:gap-4"
+              onClick={() => scrollTo('demo')}
+            >
+              <RocketIcon className="w-5 h-5 inline" />
               <span className="text-lg"> Get started</span>
             </button>
           </motion.div>

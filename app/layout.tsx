@@ -4,7 +4,7 @@ import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
 });
@@ -16,12 +16,22 @@ const jakarta = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: 'YouTidy - Organize Your YouTube Likes',
-  description: "YouTidy helps you organize and rediscover the YouTube videos you've liked over the years.",
+  description:
+    "YouTidy helps you organize and rediscover the YouTube videos you've liked over the years.",
   metadataBase: new URL('https://youtidy.app'), // Replace with your domain
-  keywords: ['YouTube', 'video organizer', 'liked videos', 'YouTube history', 'playlist manager', 'nostalgia', 'Google Takeout'],
+  keywords: [
+    'YouTube',
+    'video organizer',
+    'liked videos',
+    'YouTube history',
+    'playlist manager',
+    'nostalgia',
+    'Google Takeout',
+  ],
   openGraph: {
     title: 'YouTidy',
-    description: "Rediscover your liked YouTube videos and explore your watch history like never before.",
+    description:
+      'Rediscover your liked YouTube videos and explore your watch history like never before.',
     url: 'https://youtidy.app',
     siteName: 'YouTidy',
     images: [
@@ -38,7 +48,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'YouTidy',
-    description: "Organize and revisit your favorite YouTube moments with YouTidy.",
+    description: 'Organize and revisit your favorite YouTube moments with YouTidy.',
     creator: '@youtidyapp', // Optional: your Twitter handle
     images: ['https://youtidy.app/og-image.png'], // Replace with your image
   },
@@ -47,20 +57,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
       <body className={`${inter.variable} ${jakarta.variable} font-sans`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-        >
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           {children}
           <Toaster />
         </ThemeProvider>

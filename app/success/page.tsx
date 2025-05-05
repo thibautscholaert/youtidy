@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -31,7 +31,8 @@ export default function SuccessPage() {
           </div>
           <h1 className="text-2xl font-bold mb-4">Payment Successful!</h1>
           <p className="text-gray-600 dark:text-gray-300 mb-8">
-            Thank you for your purchase. Your account has been upgraded and you now have access to all features.
+            Thank you for your purchase. Your account has been upgraded and you now have access to
+            all features.
           </p>
           <Link href="/" passHref>
             <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { motion } from 'framer-motion';
@@ -12,7 +12,8 @@ const features = [
   },
   {
     title: 'Dynamic playlists',
-    description: 'Create custom playlists from your likes or let us generate them based on your preferences.',
+    description:
+      'Create custom playlists from your likes or let us generate them based on your preferences.',
     icon: <List className="h-8 w-8 text-[#FFE066]" />,
   },
   {
@@ -39,10 +40,10 @@ const containerVariants = {
 
 const featureVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { 
+    transition: {
       duration: 0.6,
     },
   },
@@ -53,29 +54,31 @@ export function FeaturesSection() {
     <section id="features" className="section py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <motion.h2 
+          <motion.h2
             className="text-3xl md:text-4xl font-bold mb-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            Your YouTube memory deserves<br />
+            Your YouTube memory deserves
+            <br />
             better than endless scrolling
           </motion.h2>
-          <motion.p 
+          <motion.p
             className="text-xl text-white max-w-3xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            You like videos to rewatch them later, but you never do.<br />
+            You like videos to rewatch them later, but you never do.
+            <br />
             YouTidy gives you back control of your personal YouTube library.
           </motion.p>
         </div>
 
-        <motion.div 
+        <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 max-w-6xl mx-auto"
           variants={containerVariants}
           initial="hidden"
@@ -83,14 +86,12 @@ export function FeaturesSection() {
           viewport={{ once: true }}
         >
           {features.map((feature, index) => (
-            <motion.div 
+            <motion.div
               key={index}
               className="glass-card flex flex-col items-center text-center p-6"
               variants={featureVariants}
             >
-              <div className="mb-5 p-4 rounded-full bg-white/10">
-                {feature.icon}
-              </div>
+              <div className="mb-5 p-4 rounded-full bg-white/10">{feature.icon}</div>
               <h3 className="text-xl font-semibold mb-3 text-[#FFE066]">{feature.title}</h3>
               <p className="text-white/90">{feature.description}</p>
             </motion.div>

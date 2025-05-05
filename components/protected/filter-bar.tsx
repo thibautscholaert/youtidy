@@ -20,8 +20,8 @@ const FilterBar = forwardRef<FilterBarRef, FilterBarProps>(
     const debouncedSearch = useCallback(
       debounce((val: string) => {
         onSearch(val);
-      }, 300), // adjust delay if needed
-      []
+      }, 300),
+      [onSearch]
     );
 
     useImperativeHandle(ref, () => ({
@@ -32,12 +32,13 @@ const FilterBar = forwardRef<FilterBarRef, FilterBarProps>(
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setInputValue(e.target.value);
-      onSearch?.(e.target.value);
     };
 
     useEffect(() => {
       debouncedSearch(inputValue);
-      return debouncedSearch.cancel; // cancel on unmount or before next call
+      return () => {
+        debouncedSearch.cancel();
+      };
     }, [inputValue, debouncedSearch]);
 
     return (
@@ -61,5 +62,7 @@ const FilterBar = forwardRef<FilterBarRef, FilterBarProps>(
     );
   }
 );
+
+FilterBar.displayName = 'FilterBar'; // 👈 Fix ESLint warning
 
 export default FilterBar;
