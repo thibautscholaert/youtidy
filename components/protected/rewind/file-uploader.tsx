@@ -143,7 +143,7 @@ export default function HtmlUploader({
           ) : parsed ? (
             <>
               <span>File parsed</span>
-              <CheckCircle2Icon className="h-6 w-6 inline text-green-600" />
+              <CheckCircle2Icon className="h-6 w-6 text-green-600 inline" />
             </>
           ) : (
             <>
