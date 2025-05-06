@@ -18,28 +18,8 @@ export function encodedRedirect(type: 'error' | 'success', path: string, message
   return redirect(`${path}?${type}=${encodeURIComponent(message)}`);
 }
 
-export function parseLocalizedDate(input: string, locale = 'fr') {
-  // 1. Extract the timezone
-  const tzAbbr = input.match(/\b[A-Z]{2,4}\b$/)?.[0] || 'CEST';
-
-  // 2. Clean the string (remove the timezone)
-  const cleaned = input.replace(/\b[A-Z]{2,4}\b$/, '').trim();
-
-  // 3. Map abbreviation to IANA time zone
-  const zoneMap: Record<string, string> = {
-    CEST: 'Europe/Paris',
-    CET: 'Europe/Paris',
-    PST: 'America/Los_Angeles',
-    EST: 'America/New_York',
-  };
-
-  const zone = zoneMap[tzAbbr] || 'UTC';
-
-  // 4. Parse
-  const dt = DateTime.fromFormat(cleaned, 'd LLLL yyyy, HH:mm:ss', {
-    locale: 'fr',
-    zone,
+export default function createWorker() {
+  return new Worker(new URL('../workers/parser.worker.ts', import.meta.url), {
+    type: 'module',
   });
-
-  return dt.toJSDate();
 }

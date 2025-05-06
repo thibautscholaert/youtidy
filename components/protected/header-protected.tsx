@@ -53,7 +53,7 @@ export function HeaderProtected() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2" aria-label="YouTidy home">
               <img src="/logo.png" alt="YouTidy Logo" className="h-8 w-8 rounded-full" />
-              <span className="font-jakarta font-bold text-xl text-[#FFE066]">YouTidy</span>
+              <span className="font-jakarta font-bold text-2xl text-gradient">YouTidy</span>
             </Link>
           </div>
 

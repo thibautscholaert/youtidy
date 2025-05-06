@@ -15,6 +15,16 @@ export async function initDB() {
   });
 }
 
+export async function cleanDB() {
+  const db = await initDB();
+  const tx = db.transaction('videos', 'readwrite');
+  const store = tx.objectStore('videos');
+
+  // Clear the object store
+  await store.clear();
+  await tx.done;
+}
+
 export const getAllVideos = async () => {
   const db = await initDB();
   const tx = db.transaction('videos', 'readonly');

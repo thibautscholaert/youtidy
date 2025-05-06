@@ -1,17 +1,33 @@
 'use client';
 
-import { parseYouTubeWatchHistoryHtml } from '@/lib/youtube/youtube';
-import { useCallback, useState } from 'react';
+import { cleanDB, initDB } from '@/lib/indexedDB';
+import createWorker from '@/lib/utils';
+import { IDBPDatabase } from 'idb';
+import {
+  CheckCircle2Icon,
+  DownloadCloudIcon,
+  ExternalLinkIcon,
+  Loader2Icon,
+  RocketIcon,
+} from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { openDB } from 'idb';
-import { initDB } from '@/lib/indexedDB';
-import { WatchedVideo } from '@/types/yt-video-page';
 
-export default function HtmlUploader() {
+export default function HtmlUploader({
+  onUploaded,
+  onUpload,
+}: {
+  onUploaded: () => void;
+  onUpload: () => void;
+}) {
+  const [parsed, setParsed] = useState(false);
+  const [isWorking, setIsWorking] = useState(false);
   const [fileName, setFileName] = useState('');
   const [fileContent, setFileContent] = useState<string>('');
+  const [parsedCount, setParsedCount] = useState(0);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
+    setParsed(false);
     const file = acceptedFiles[0];
     if (!file) return;
 
@@ -27,6 +43,47 @@ export default function HtmlUploader() {
     reader.readAsText(file);
   }, []);
 
+  const workerRef = useRef<Worker>();
+
+  useEffect(() => {
+    const worker = createWorker();
+    workerRef.current = worker;
+
+    const dbInstancePromise: Promise<IDBPDatabase<any>> = initDB();
+
+    worker.onmessage = async (e) => {
+      const dbInstance = await dbInstancePromise;
+      if (e.data.type === 'batch') {
+        const batch = e.data.data;
+        const tx = dbInstance.transaction('videos', 'readwrite');
+        const store = tx.objectStore('videos');
+
+        for (const video of batch) {
+          // console.log('Storing video:', video);
+          try {
+            await store.put(video);
+          } catch (err) {
+            console.error('IndexedDB insert failed:', err, video);
+          }
+        }
+
+        await tx.done;
+        console.log(`Stored batch of ${batch.length} videos`);
+      } else if (e.data.type === 'parsed') {
+        setParsedCount(e.data.data);
+      } else if (e.data.type === 'done') {
+        console.log('Parsing terminé');
+        setIsWorking(false);
+        setParsed(true);
+        onUploaded();
+      }
+    };
+
+    return () => {
+      worker.terminate();
+    };
+  }, [onUploaded]);
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: { 'text/html': ['.html'] },
@@ -34,71 +91,68 @@ export default function HtmlUploader() {
   });
 
   const handleParse = async () => {
-    const videos: WatchedVideo[] = parseYouTubeWatchHistoryHtml(fileContent);
-
-    const db = await initDB();
-
-    const chunkArray = (arr: any[], size: number) => {
-      const result = [];
-      for (let i = 0; i < arr.length; i += size) {
-        result.push(arr.slice(i, i + size));
-      }
-      return result;
-    };
-
-    // Split the videos array into chunks of 100
-    const chunkedVideos = chunkArray(videos, 100);
-
-    // Start a transaction for the database
-    const tx = db.transaction('videos', 'readwrite');
-
-    const store = tx.objectStore('videos');
-
-    // Clear the store before inserting new videos
-    await store.clear();
-
-    // Insert videos in chunks
-    for (const chunk of chunkedVideos) {
-      const insertPromises = chunk.map((video) => store.put(video));
-      await Promise.all(insertPromises); // Wait for all insertions in this chunk to complete
-    }
-
-    // Wait for the transaction to finish
-    await tx.done;
-    console.log('Videos stored in IndexedDB:', videos);
+    if (!fileContent || !workerRef.current) return;
+    setParsedCount(0);
+    setIsWorking(true);
+    onUpload();
+    await cleanDB();
+    workerRef.current.postMessage(fileContent);
   };
 
   return (
-    <div className="p-4 bg-white/10 rounded-lg shadow-md space-y-4 text-white">
+    <div className="flex flex-col items-center justify-center gap-4 p-4 bg-white/10 rounded-lg shadow-md text-white w-80">
+      <a
+        className="retro-button-accent flex items-center justify-center gap-2 sm:gap-4 w-fit"
+        href="https://takeout.google.com/settings/takeout/custom/youtube"
+        target="_blank"
+      >
+        <DownloadCloudIcon className="w-6 h-6 inline" />
+        <span className="">Google takeout</span>
+        <ExternalLinkIcon className="w-6 h-6 inline" />
+      </a>
       <div
         {...getRootProps()}
-        className={`p-6 border-2 border-dashed rounded-md cursor-pointer transition ${
+        className={`flex items-center p-6 border-2 border-dashed rounded-md cursor-pointer transition h-32 w-full ${
           isDragActive ? 'border-yellow-400 bg-yellow-100/10' : 'border-white/20'
         }`}
       >
-        <input {...getInputProps()} />
+        <input {...getInputProps()} disabled={isWorking} />
         <p className="text-center">
           {isDragActive
             ? 'Drop the HTML file here...'
-            : 'Click or drag your YouTube Watch History .html file here'}
+            : 'Click or drag your YouTube Watch History .html file here. It should be in history/watch-history.html'}
         </p>
       </div>
 
-      {fileContent && (
-        <div>
-          <h4 className="font-bold mb-2">Loaded: {fileName}</h4>
-          {/* <pre className="max-h-64 overflow-auto p-3 bg-black/30 rounded text-sm whitespace-pre-wrap">
-            {fileContent.slice(0, 500000)}
-            {fileContent.length > 100000 && '...'}
-          </pre> */}
-          <button
-            className="retro-button-accent flex items-center justify-center gap-2 sm:gap-4 w-fit"
-            onClick={handleParse}
-          >
-            Parse
-          </button>
-        </div>
-      )}
+      <div className="flex flex-col items-center justify-center gap-4">
+        {fileContent ? (
+          <h4 className="font-semibold mb-2">Loaded: {fileName}</h4>
+        ) : (
+          <h4 className="font-semibold mb-2">No file loaded</h4>
+        )}
+        <button
+          className="retro-button-accent flex items-center justify-center gap-2 sm:gap-4 w-fit w-60"
+          onClick={handleParse}
+          disabled={isWorking || parsed || !fileContent}
+        >
+          {isWorking ? (
+            <>
+              <span>Processed {parsedCount}</span>
+              <Loader2Icon className="animate-spin h-6 w-6 inline" />
+            </>
+          ) : parsed ? (
+            <>
+              <span>File parsed</span>
+              <CheckCircle2Icon className="h-6 w-6 inline text-green-600" />
+            </>
+          ) : (
+            <>
+              <span>{`Let's go`}</span>
+              <RocketIcon className="h-6 w-6 inline" />
+            </>
+          )}
+        </button>
+      </div>
     </div>
   );
 }

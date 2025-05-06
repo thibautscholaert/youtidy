@@ -1,11 +1,10 @@
 'use client';
-import { handleGoogleSignIn } from '@/lib/auth';
+import { getToken, handleGoogleSignIn } from '@/lib/auth';
 import { categoriesMap } from '@/lib/constants';
-import { createClient } from '@/lib/supabase/client';
 import { getLikedVideos } from '@/lib/youtube/youtube';
 import { Item } from '@/types/yt-video-page';
 import classNames from 'classnames';
-import { CheckCircle, ExternalLinkIcon, RocketIcon } from 'lucide-react';
+import { CheckCircle, Loader2Icon, RocketIcon } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import FilterBar, { FilterBarRef } from './filter-bar';
 import VideoPreview from './video-preview';
@@ -25,15 +24,17 @@ export function ProtectedPage() {
   const [googleAccessToken, setGoogleAccessToken] = useState<string | null | undefined>(null);
 
   useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session && session.provider_token) {
-        setGoogleAccessToken(session.provider_token);
-      } else {
-        handleGoogleSignIn();
-      }
-    });
-  }, []);
+    if (!googleAccessToken) {
+      getToken().then((token) => {
+        console.log('Token:', token);
+        if (token) {
+          setGoogleAccessToken(token);
+        } else {
+          handleGoogleSignIn();
+        }
+      });
+    }
+  }, [googleAccessToken]);
 
   const filteredVideos = useMemo(() => {
     let filtered = allvideos;
@@ -146,29 +147,36 @@ export function ProtectedPage() {
     }));
   }, [allvideos]);
 
-  const triggerFetchLikedVideos = async () => {
-    setFetching(true);
-    const data = pageToken ? await getLikedVideos(pageToken) : await getLikedVideos();
-    if (data) {
-      setAllVideos((prev) => [...prev, ...data.items]);
-      if (data.nextPageToken) {
-        await fetchLikedVideos(data.nextPageToken);
+  const triggerFetchLikedVideos = async (token?: string) => {
+    const accessToken = token ?? googleAccessToken;
+    if (accessToken) {
+      setFetching(true);
+      const data = pageToken
+        ? await getLikedVideos(accessToken, pageToken)
+        : await getLikedVideos(accessToken);
+      if (data) {
+        setAllVideos((prev) => [...prev, ...data.items]);
+        if (data.nextPageToken) {
+          await fetchLikedVideos(accessToken, data.nextPageToken);
+        }
       }
+      setFetching(false);
+    } else {
+      handleGoogleSignIn();
     }
-    setFetching(false);
   };
 
   const [pageToken, setPageToken] = useState<string | null>(null);
 
-  const fetchLikedVideos = async (nextToken: string, iteration = 1) => {
-    if (nextToken && iteration <= 10) {
-      const data = await getLikedVideos(nextToken);
+  const fetchLikedVideos = async (accessToken: string, nextToken: string, iteration = 1) => {
+    if (nextToken && iteration <= 5) {
+      const data = await getLikedVideos(accessToken, nextToken);
       if (data) {
         setAllVideos((prev) => [...prev, ...data.items]);
         setTotalVideos((prev) => prev + data.pageInfo.totalResults);
         if (data.nextPageToken) {
           setPageToken(data.nextPageToken);
-          return fetchLikedVideos(data.nextPageToken, iteration + 1);
+          return fetchLikedVideos(accessToken, data.nextPageToken, iteration + 1);
         }
       }
       await new Promise((resolve) => setTimeout(resolve, 500));
@@ -186,21 +194,30 @@ export function ProtectedPage() {
       <div className="p-2 md:p-4 flex flex-col gap-4">
         {googleAccessToken && (
           <div className="flex flex-col gap-4 items-center">
-            <div className="bg-green-600 p-2 rounded-md flex items-center gap-2 w-fit">
+            <div className="bg-green-600 p-2 rounded-md flex items-center gap-2 w-fit px-4">
               <span>Access to Youtube</span>
               <CheckCircle className="inline-block w-6 h-6 text-green-300" />
             </div>
 
             <button
-              className="retro-button-accent flex items-center justify-center gap-2 sm:gap-4 w-fit"
+              className="retro-button-accent flex items-center justify-center gap-2 sm:gap-4 w-fit w-80"
               onClick={() => triggerFetchLikedVideos()}
               disabled={fetching || (allvideos.length > 0 && allvideos.length >= totalVideos)}
             >
-              <RocketIcon className="w-5 h-5 inline" />
-              {allvideos && allvideos.length > 0 ? (
-                <span className="text-lg">Fetch more videos</span>
+              {fetching ? (
+                <>
+                  <span className="text-lg">Fetching videos</span>
+                  <Loader2Icon className="animate-sprin w-6 h-6 inline" />
+                </>
               ) : (
-                <span className="text-lg">Fetch liked videos</span>
+                <>
+                  {allvideos && allvideos.length > 0 ? (
+                    <span className="text-lg">Fetch more videos</span>
+                  ) : (
+                    <span className="text-lg">Fetch liked videos</span>
+                  )}
+                  <RocketIcon className="w-6 h-6 inline" />
+                </>
               )}
             </button>
           </div>

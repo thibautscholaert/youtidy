@@ -1,11 +1,11 @@
 'use client';
-import { getAllVideos, getVideosGroupedByVideoId, initDB } from '@/lib/indexedDB';
-import { useEffect, useMemo, useState } from 'react';
-import HtmlUploader from './file-uploader';
+import { getAllVideos, getVideosGroupedByVideoId } from '@/lib/indexedDB';
 import { WatchedVideo } from '@/types/yt-video-page';
 import classNames from 'classnames';
-import { ExternalLinkIcon, RocketIcon } from 'lucide-react';
+import { ExternalLinkIcon, RocketIcon, ScanSearchIcon } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import FilterBar from '../filter-bar';
+import HtmlUploader from './file-uploader';
 
 export function RewindPage() {
   const filterBlockClass = 'flex flex-wrap gap-2 items-center justify-center p-1';
@@ -13,6 +13,8 @@ export function RewindPage() {
   const filterButtonClass =
     'flex items-center justify-between gap-2 px-1 py-0.5 glass-card text-sm';
 
+  const [isFetching, setIsFetching] = useState<boolean>(false);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
   const [allVideos, setAllVideos] = useState<WatchedVideo[]>([]);
   const [selectedReleaseYears, setSelectedReleaseYears] = useState<string[]>([]);
   const amountOfVideos = 50;
@@ -25,8 +27,19 @@ export function RewindPage() {
   }, []);
 
   const init = async () => {
+    setIsFetching(true);
     const allVideos = await getAllVideos();
     setAllVideos(allVideos);
+    setIsFetching(false);
+  };
+
+  const onUploaded = async () => {
+    setIsUploading(true);
+    init();
+  };
+
+  const onUpload = async () => {
+    setIsUploading(false);
   };
 
   const groupedByYear = useMemo(() => {
@@ -65,7 +78,7 @@ export function RewindPage() {
     }
 
     return filtered;
-  }, [allVideos, selectedReleaseYears, query, excludeQuery, videosCountDisplayed]);
+  }, [allVideos, selectedReleaseYears, query, excludeQuery]);
 
   const analyzeVideos = async () => {
     // TODO
@@ -82,23 +95,17 @@ export function RewindPage() {
   return (
     <div className="relative bg-white/10 dark:bg-white/10 rounded-3xl overflow-hidden py-16">
       <div className="p-2 md:p-4 flex flex-col items-center justify-center gap-4">
-        <a
-          className="retro-button flex items-center justify-center gap-2 sm:gap-4 w-fit"
-          href="https://takeout.google.com/settings/takeout/custom/youtube"
-          target="_blank"
-        >
-          <ExternalLinkIcon className="w-5 h-5 inline" />
-          <span className="text-lg">Google takeout</span>
-        </a>
-        <HtmlUploader></HtmlUploader>
+        <HtmlUploader onUploaded={init} onUpload={onUpload}></HtmlUploader>
+        <hr className="w-full border-t border-white/20" />
         <button
           className="retro-button-accent flex items-center justify-center gap-2 sm:gap-4 w-fit"
           onClick={() => analyzeVideos()}
-          disabled={false}
+          disabled={isFetching || isUploading}
         >
-          <RocketIcon className="w-5 h-5 inline" />
-          Analyze
+          Analyze videos
+          <ScanSearchIcon className="w-6 h-6 inline" />
         </button>
+        <hr className="w-full border-t border-white/20" />
         <div className="flex flex-wrap gap-2 items-center justify-center">
           <FilterBar
             // ref={filterRef}

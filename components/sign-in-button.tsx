@@ -3,7 +3,7 @@
 import { signOutAction } from '@/app/actions';
 import { handleGoogleSignIn } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/client';
-import { Loader2Icon } from 'lucide-react';
+import { Loader2Icon, LogOut } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function SignInButton() {
@@ -25,14 +25,15 @@ export default function SignInButton() {
   return ready ? (
     authenticated ? (
       <form action={signOutAction}>
-        <button className="retro-button" type="submit">
+        <button className="retro-button flex items-center gap-2" type="submit">
           Sign out
+          <LogOut className="h-5 w-5 inline" />
         </button>
       </form>
     ) : (
       <button className="retro-button" onClick={handleGoogleSignIn}>
-        <img src="google.png" className="h-6 w-6 mr-2 inline bg-white rounded-full" /> Sign in with
-        Google
+        <img src="google.png" className="h-6 w-6 mr-2 inline bg-white rounded-full" alt="Sign in" />
+        Sign in with Google
       </button>
     )
   ) : (
