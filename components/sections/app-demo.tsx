@@ -21,7 +21,6 @@ export function AppDemo() {
           transition={{ duration: 0.8 }}
         >
           <AppDemo1 />
-
         </motion.div>
       </div>
     </section>

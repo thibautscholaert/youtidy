@@ -51,7 +51,6 @@ export function ProtectedPage() {
         const data = e.data.data;
         setAllVideos((prev) => [...prev, ...data.items]);
         setTotalVideos((prev) => prev + data.pageInfo.totalResults);
-
       } else if (e.data.type === 'done') {
         const nextPageToken = e.data.data;
         console.log('nextPageToken', nextPageToken);
@@ -208,7 +207,9 @@ export function ProtectedPage() {
             <button
               className="retro-button-accent flex items-center justify-center gap-2 sm:gap-4 w-fit w-80"
               onClick={() => triggerFetchLikedVideos()}
-              disabled={fetching || allLoaded || (allvideos.length > 0 && allvideos.length >= totalVideos)}
+              disabled={
+                fetching || allLoaded || (allvideos.length > 0 && allvideos.length >= totalVideos)
+              }
             >
               {fetching ? (
                 <>
@@ -241,7 +242,7 @@ export function ProtectedPage() {
                   <div className="text-sm bg-[#FFE066] text-black px-2 py-1 rounded-full">
                     <strong>{allvideos.length}</strong> videos
                   </div>
-                  <span className='text-xs'>({pageCountFetched} pages)</span>
+                  <span className="text-xs">({pageCountFetched} pages)</span>
                 </button>
                 <hr className="w-full border-t border-white/20" />
                 <FilterBar

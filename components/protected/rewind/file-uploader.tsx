@@ -112,8 +112,9 @@ export default function HtmlUploader({
       </a>
       <div
         {...getRootProps()}
-        className={`flex items-center p-6 border-2 border-dashed rounded-md cursor-pointer transition h-32 w-full ${isDragActive ? 'border-yellow-400 bg-yellow-100/10' : 'border-white/20'
-          }`}
+        className={`flex items-center p-6 border-2 border-dashed rounded-md cursor-pointer transition h-32 w-full ${
+          isDragActive ? 'border-yellow-400 bg-yellow-100/10' : 'border-white/20'
+        }`}
       >
         <input {...getInputProps()} disabled={isWorking} />
         <p className="text-center">

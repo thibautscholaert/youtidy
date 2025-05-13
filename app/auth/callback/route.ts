@@ -27,16 +27,18 @@ export async function GET(request: Request) {
     const refreshToken = supaSession.session.provider_refresh_token;
 
     const expiresAt = new Date(Date.now() + 55 * 60 * 1000); // Current time + 55 minutes as a Date object
-    const upsertRes = await supabase.from('user_provider_token').upsert({
-      email: supaSession.session.user.email,
-      provider: 'youtube',
-      access_token: accessToken,
-      refresh_token: refreshToken,
-      expires_at: expiresAt,
-    },
+    const upsertRes = await supabase.from('user_provider_token').upsert(
+      {
+        email: supaSession.session.user.email,
+        provider: 'youtube',
+        access_token: accessToken,
+        refresh_token: refreshToken,
+        expires_at: expiresAt,
+      },
       {
         onConflict: 'email,provider',
-      });
+      }
+    );
     console.log('Upsert result:', upsertRes);
   }
 

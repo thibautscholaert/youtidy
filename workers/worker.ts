@@ -2,7 +2,7 @@ import { getLikedVideos } from '@/lib/youtube/youtube';
 self.onmessage = async (event) => {
   const { accessToken, pageToken } = event.data;
 
-  const data = await getLikedVideos(accessToken, pageToken)
+  const data = await getLikedVideos(accessToken, pageToken);
 
   let nextPageToken = data?.nextPageToken;
 
