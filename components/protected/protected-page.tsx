@@ -1,7 +1,7 @@
 'use client';
 import { getToken, handleGoogleSignIn } from '@/lib/auth';
 import { categoriesMap } from '@/lib/constants';
-import { getLikedVideos } from '@/lib/youtube/youtube';
+import { createWorker } from '@/lib/utils';
 import { Item } from '@/types/yt-video-page';
 import classNames from 'classnames';
 import { CheckCircle, Loader2Icon, RocketIcon } from 'lucide-react';
@@ -20,6 +20,9 @@ export function ProtectedPage() {
   const [fetching, setFetching] = useState<boolean>(false);
   const [totalVideos, setTotalVideos] = useState<number>(0);
   const [videosCountDisplayed, setVideosCountDisplayed] = useState<number>(20);
+  const [pageToken, setPageToken] = useState<string | null>(null);
+  const [allLoaded, setAllLoaded] = useState<boolean>(false);
+  const [pageCountFetched, setPageCountFetched] = useState<number>(0);
 
   const [googleAccessToken, setGoogleAccessToken] = useState<string | null | undefined>(null);
 
@@ -35,6 +38,35 @@ export function ProtectedPage() {
       });
     }
   }, [googleAccessToken]);
+
+  const workerRef = useRef<Worker>();
+
+  useEffect(() => {
+    const worker = createWorker();
+    workerRef.current = worker;
+
+    worker.onmessage = async (e) => {
+      if (e.data.type === 'batch') {
+        setPageCountFetched((prev) => prev + 1);
+        const data = e.data.data;
+        setAllVideos((prev) => [...prev, ...data.items]);
+        setTotalVideos((prev) => prev + data.pageInfo.totalResults);
+
+      } else if (e.data.type === 'done') {
+        const nextPageToken = e.data.data;
+        console.log('nextPageToken', nextPageToken);
+        setPageToken(nextPageToken);
+        if (!nextPageToken) {
+          setAllLoaded(true);
+        }
+        setFetching(false);
+      }
+    };
+
+    return () => {
+      worker.terminate();
+    };
+  }, []);
 
   const filteredVideos = useMemo(() => {
     let filtered = allvideos;
@@ -70,7 +102,7 @@ export function ProtectedPage() {
   }, [allvideos, selectedCategories, selectedChannels, selectedTag, selectedReleaseYears, query]);
 
   const groupedByYear = useMemo(() => {
-    const grouped = filteredVideos.reduce((acc: Record<string, Item[]>, video) => {
+    const grouped = allvideos.reduce((acc: Record<string, Item[]>, video) => {
       const year = new Date(video.snippet.publishedAt).getFullYear().toString();
       if (!acc[year]) {
         acc[year] = [];
@@ -80,7 +112,7 @@ export function ProtectedPage() {
     }, {});
 
     return Object.entries(grouped).sort(([a], [b]) => parseInt(b) - parseInt(a));
-  }, [filteredVideos]);
+  }, [allvideos]);
 
   const selectCategory = (categoryId: string) => {
     if (selectedCategories.includes(categoryId)) {
@@ -149,37 +181,11 @@ export function ProtectedPage() {
 
   const triggerFetchLikedVideos = async (token?: string) => {
     const accessToken = token ?? googleAccessToken;
-    if (accessToken) {
+    if (accessToken && workerRef.current) {
       setFetching(true);
-      const data = pageToken
-        ? await getLikedVideos(accessToken, pageToken)
-        : await getLikedVideos(accessToken);
-      if (data) {
-        setAllVideos((prev) => [...prev, ...data.items]);
-        if (data.nextPageToken) {
-          await fetchLikedVideos(accessToken, data.nextPageToken);
-        }
-      }
-      setFetching(false);
+      workerRef.current.postMessage({ accessToken, pageToken });
     } else {
       handleGoogleSignIn();
-    }
-  };
-
-  const [pageToken, setPageToken] = useState<string | null>(null);
-
-  const fetchLikedVideos = async (accessToken: string, nextToken: string, iteration = 1) => {
-    if (nextToken && iteration <= 5) {
-      const data = await getLikedVideos(accessToken, nextToken);
-      if (data) {
-        setAllVideos((prev) => [...prev, ...data.items]);
-        setTotalVideos((prev) => prev + data.pageInfo.totalResults);
-        if (data.nextPageToken) {
-          setPageToken(data.nextPageToken);
-          return fetchLikedVideos(accessToken, data.nextPageToken, iteration + 1);
-        }
-      }
-      await new Promise((resolve) => setTimeout(resolve, 500));
     }
   };
 
@@ -202,7 +208,7 @@ export function ProtectedPage() {
             <button
               className="retro-button-accent flex items-center justify-center gap-2 sm:gap-4 w-fit w-80"
               onClick={() => triggerFetchLikedVideos()}
-              disabled={fetching || (allvideos.length > 0 && allvideos.length >= totalVideos)}
+              disabled={fetching || allLoaded || (allvideos.length > 0 && allvideos.length >= totalVideos)}
             >
               {fetching ? (
                 <>
@@ -235,6 +241,7 @@ export function ProtectedPage() {
                   <div className="text-sm bg-[#FFE066] text-black px-2 py-1 rounded-full">
                     <strong>{allvideos.length}</strong> videos
                   </div>
+                  <span className='text-xs'>({pageCountFetched} pages)</span>
                 </button>
                 <hr className="w-full border-t border-white/20" />
                 <FilterBar
@@ -314,8 +321,8 @@ export function ProtectedPage() {
               {filteredVideos.length > 0 ? (
                 <div className="flex flex-col w-3/4">
                   <div className="flex flex-wrap justify-center items-center gap-2">
-                    {filteredVideos.slice(0, videosCountDisplayed).map((video) => (
-                      <VideoPreview key={video.id} video={video} />
+                    {filteredVideos.slice(0, videosCountDisplayed).map((video, index) => (
+                      <VideoPreview key={`${video.id}_${index}`} video={video} />
                     ))}
                   </div>
                   <button

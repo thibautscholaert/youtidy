@@ -1,7 +1,7 @@
 'use client';
 
 import { cleanDB, initDB } from '@/lib/indexedDB';
-import createWorker from '@/lib/utils';
+import { createParserWorker } from '@/lib/utils';
 import { IDBPDatabase } from 'idb';
 import {
   CheckCircle2Icon,
@@ -46,7 +46,7 @@ export default function HtmlUploader({
   const workerRef = useRef<Worker>();
 
   useEffect(() => {
-    const worker = createWorker();
+    const worker = createParserWorker();
     workerRef.current = worker;
 
     const dbInstancePromise: Promise<IDBPDatabase<any>> = initDB();
@@ -112,9 +112,8 @@ export default function HtmlUploader({
       </a>
       <div
         {...getRootProps()}
-        className={`flex items-center p-6 border-2 border-dashed rounded-md cursor-pointer transition h-32 w-full ${
-          isDragActive ? 'border-yellow-400 bg-yellow-100/10' : 'border-white/20'
-        }`}
+        className={`flex items-center p-6 border-2 border-dashed rounded-md cursor-pointer transition h-32 w-full ${isDragActive ? 'border-yellow-400 bg-yellow-100/10' : 'border-white/20'
+          }`}
       >
         <input {...getInputProps()} disabled={isWorking} />
         <p className="text-center">

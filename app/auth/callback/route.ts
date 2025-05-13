@@ -33,7 +33,10 @@ export async function GET(request: Request) {
       access_token: accessToken,
       refresh_token: refreshToken,
       expires_at: expiresAt,
-    });
+    },
+      {
+        onConflict: 'email,provider',
+      });
     console.log('Upsert result:', upsertRes);
   }
 

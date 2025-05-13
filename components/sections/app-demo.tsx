@@ -20,18 +20,8 @@ export function AppDemo() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          <Carousel opts={{ loop: true, slidesToScroll: 1 }} className="rounded-3xl">
-            <CarouselContent>
-              <CarouselItem>
-                <AppDemo1 />
-              </CarouselItem>
-              <CarouselItem>
-                <AppDemo1 />
-              </CarouselItem>
-            </CarouselContent>
-            <CarouselPrevious className="left-0 top-1/2" />
-            <CarouselNext className="right-0 top-1/2" />
-          </Carousel>
+          <AppDemo1 />
+
         </motion.div>
       </div>
     </section>

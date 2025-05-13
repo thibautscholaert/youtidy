@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import { clsx, type ClassValue } from 'clsx';
 import { redirect } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
@@ -18,8 +17,14 @@ export function encodedRedirect(type: 'error' | 'success', path: string, message
   return redirect(`${path}?${type}=${encodeURIComponent(message)}`);
 }
 
-export default function createWorker() {
+export function createParserWorker() {
   return new Worker(new URL('../workers/parser.worker.ts', import.meta.url), {
+    type: 'module',
+  });
+}
+
+export function createWorker() {
+  return new Worker(new URL('../workers/worker.ts', import.meta.url), {
     type: 'module',
   });
 }
