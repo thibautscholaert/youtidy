@@ -75,6 +75,7 @@ function parseYouTubeWatchHistoryHtml(html: string): WatchedVideo[] {
       }
     }
   }
+  (self as any).postMessage({ type: 'parsed', data: history.length });
 
   return history;
 }

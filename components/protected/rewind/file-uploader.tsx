@@ -137,12 +137,12 @@ export default function HtmlUploader({
         >
           {isWorking ? (
             <>
-              <span>Processed {parsedCount}</span>
+              <span>Parsed {parsedCount}</span>
               <Loader2Icon className="animate-spin h-6 w-6 inline" />
             </>
           ) : parsed ? (
             <>
-              <span>File parsed</span>
+              <span>Parsed {parsedCount}</span>
               <CheckCircle2Icon className="h-6 w-6 text-green-600 inline" />
             </>
           ) : (
