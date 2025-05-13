@@ -9,7 +9,7 @@ import { createClient } from '@/lib/supabase/client';
 
 const navItems: { name: string; href: string; auth?: boolean }[] = [
   { name: 'Home', href: '/' },
-  { name: 'Liked', href: '/protected' },
+  { name: 'Liked', href: '/protected/liked' },
   { name: 'History', href: '/protected/rewind' },
   // { name: 'Pricing', href: '#pricing' },
   // { name: 'Privacy', href: '#trust' },

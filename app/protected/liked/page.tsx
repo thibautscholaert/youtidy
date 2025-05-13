@@ -1,13 +1,13 @@
 import { Footer } from '@/components/layout/footer';
 import { HeaderProtected } from '@/components/protected/header-protected';
-import { RewindPage } from '@/components/protected/rewind/rewind-page';
+import { ProtectedPage } from '@/components/protected/protected-page';
 
 export default function Protected() {
   return (
     <main className="min-h-screen overflow-hidden">
       <HeaderProtected />
 
-      <RewindPage />
+      <ProtectedPage />
 
       <Footer />
     </main>

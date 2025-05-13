@@ -2,7 +2,7 @@
 import { getAllVideos, getVideosGroupedByVideoId } from '@/lib/indexedDB';
 import { WatchedVideo } from '@/types/yt-video-page';
 import classNames from 'classnames';
-import { ExternalLinkIcon, Loader2Icon, RocketIcon, ScanSearchIcon } from 'lucide-react';
+import { Loader2Icon, ScanSearchIcon } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import FilterBar from '../filter-bar';
 import HtmlUploader from './file-uploader';
@@ -166,36 +166,75 @@ export function RewindPage() {
             </div>
 
             {allVideos.length > 0 && (
-              <div className={filterBlockClass}>
-                <h2>Most watched</h2>
-                <div className="flex flex-wrap gap-2 items-center justify-center">
-                  {groupedById
-                    .sort((a, b) => b.count - a.count)
-                    .slice(0, videosCountDisplayed)
-                    .map((video) => (
-                      <a
-                        key={video.video.videoId}
-                        href={video.video.url}
-                        target="_blank"
-                        className="flex items-center gap-2 sm:gap-4 px-1 py-0.5 glass-card text-sm"
-                      >
-                        <div className="font-semibold text-white">{video.video.title}</div>
-                        <div className="text-xs bg-[#FFE066] text-black px-2 py-1 rounded-full">
-                          <strong>{video.count}</strong>
-                        </div>
-                      </a>
-                    ))}
+              <>
+                <hr className="w-full border-t border-white/20" />
+                <div className={filterBlockClass}>
+                  <h2>Last watched</h2>
+                  <div className="flex flex-wrap gap-2 items-center justify-center">
+                    {groupedById
+                      .sort(
+                        (a, b) =>
+                          new Date(b.video.time).getTime() - new Date(a.video.time).getTime()
+                      )
+                      .slice(0, videosCountDisplayed)
+                      .map((video) => (
+                        <a
+                          key={video.video.videoId}
+                          href={video.video.url}
+                          target="_blank"
+                          className="flex items-center gap-2 sm:gap-4 px-1 py-0.5 glass-card text-sm"
+                        >
+                          <div className="font-semibold text-white">{video.video.title}</div>
+                          <div className="text-xs bg-[#FFE066] text-black px-2 py-1 rounded-full">
+                            <strong>{video.video.time}</strong>
+                          </div>
+                        </a>
+                      ))}
+                  </div>
+                  <button
+                    className="retro-button-accent flex items-center justify-center gap-2 p-2 w-fit mx-auto px-4 my-8"
+                    onClick={() => {
+                      setVideosCountDisplayed((prev) => prev + amountOfVideos);
+                    }}
+                    disabled={isFetching || isUploading || videosCountDisplayed >= allVideos.length}
+                  >
+                    <div className="font-semibold">More</div>
+                  </button>
                 </div>
-                <button
-                  className="retro-button-accent flex items-center justify-center gap-2 p-2 w-fit mx-auto px-4 my-8"
-                  onClick={() => {
-                    setVideosCountDisplayed((prev) => prev + amountOfVideos);
-                  }}
-                  disabled={isFetching || isUploading || videosCountDisplayed >= allVideos.length}
-                >
-                  <div className="font-semibold">More</div>
-                </button>
-              </div>
+
+                <hr className="w-full border-t border-white/20" />
+
+                <div className={filterBlockClass}>
+                  <h2>Most watched</h2>
+                  <div className="flex flex-wrap gap-2 items-center justify-center">
+                    {groupedById
+                      .sort((a, b) => b.count - a.count)
+                      .slice(0, videosCountDisplayed)
+                      .map((video) => (
+                        <a
+                          key={video.video.videoId}
+                          href={video.video.url}
+                          target="_blank"
+                          className="flex items-center gap-2 sm:gap-4 px-1 py-0.5 glass-card text-sm"
+                        >
+                          <div className="font-semibold text-white">{video.video.title}</div>
+                          <div className="text-xs bg-[#FFE066] text-black px-2 py-1 rounded-full">
+                            <strong>{video.count}</strong>
+                          </div>
+                        </a>
+                      ))}
+                  </div>
+                  <button
+                    className="retro-button-accent flex items-center justify-center gap-2 p-2 w-fit mx-auto px-4 my-8"
+                    onClick={() => {
+                      setVideosCountDisplayed((prev) => prev + amountOfVideos);
+                    }}
+                    disabled={isFetching || isUploading || videosCountDisplayed >= allVideos.length}
+                  >
+                    <div className="font-semibold">More</div>
+                  </button>
+                </div>
+              </>
             )}
           </>
         )}

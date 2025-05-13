@@ -52,7 +52,7 @@ const FilterBar = forwardRef<FilterBarRef, FilterBarProps>(
           type="text"
           className={classNames(
             inputClassname,
-            'w-full py-2 pl-8 pr-4 bg-white/30 text-white placeholder-white/80 rounded-md border border-white/20'
+            'w-full py-2 pl-8 pr-4 bg-white/30 text-white placeholder-white/80 rounded-md'
           )}
           placeholder={`${placeholder ?? 'Search'}...`}
           value={inputValue}
